@@ -19,7 +19,7 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       sessions: [],
       currentSessionId: null,
       isConnected: false,

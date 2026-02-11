@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Send, Bot, User, MessageSquare, Trash2, Plus } from 'lucide-react'
 import { useChatStore } from '../store/chatStore'
-import { Message } from '../types/message'
-import { useTheme } from '@lobehub/ui'
 
 export const ChatBox: React.FC = () => {
   const {
@@ -19,7 +17,6 @@ export const ChatBox: React.FC = () => {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const theme = useTheme()
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const messages = currentSession?.messages || []
@@ -57,7 +54,7 @@ export const ChatBox: React.FC = () => {
 
     try {
       // Send message to relay server (to be implemented)
-      const response = await sendMessageToRelay(userMessage, currentSessionId)
+      const response = await sendMessageToRelay(userMessage)
 
       // Add assistant response
       addMessage(currentSessionId, {
@@ -76,9 +73,8 @@ export const ChatBox: React.FC = () => {
   }
 
   const sendMessageToRelay = async (
-    message: string,
-    sessionId: string
-  ): Promise<{ content: string; metadata?: any }> => {
+    message: string
+    ): Promise<{ content: string; metadata?: any }> => {
     // This will connect to react-grab relay server
     // For now, return a mock response
     return {

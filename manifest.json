@@ -18,17 +18,17 @@
     "default_path": "sidepanel.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.ts"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["src/content.ts"]
     }
   ],
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "public/icon.svg",
+    "48": "public/icon.svg",
+    "128": "public/icon.svg"
   }
 }
