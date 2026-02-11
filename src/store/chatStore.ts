@@ -13,6 +13,7 @@ interface ChatState {
   setCurrentSession: (id: string | null) => void
   addMessage: (sessionId: string, message: Omit<Message, 'id' | 'timestamp'>) => void
   updateLastMessage: (sessionId: string, content: string) => void
+  appendLastMessage: (sessionId: string, content: string) => void  // 流式追加内容
   clearSession: (id: string) => void
   setConnected: (connected: boolean) => void
 }
@@ -81,6 +82,28 @@ export const useChatStore = create<ChatState>()(
               messages[messages.length - 1] = {
                 ...messages[messages.length - 1],
                 content,
+              }
+            }
+
+            return {
+              ...session,
+              messages,
+              updatedAt: Date.now(),
+            }
+          }),
+        }))
+      },
+
+      appendLastMessage: (sessionId, content) => {
+        set((state) => ({
+          sessions: state.sessions.map((session) => {
+            if (session.id !== sessionId) return session
+
+            const messages = [...session.messages]
+            if (messages.length > 0) {
+              messages[messages.length - 1] = {
+                ...messages[messages.length - 1],
+                content: messages[messages.length - 1].content + content,
               }
             }
 

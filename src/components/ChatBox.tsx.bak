@@ -114,20 +114,14 @@ export const ChatBox: React.FC = () => {
     }
   }
 
-  const sendMessageToRelay = async (message: string): Promise<RelayServerMessage> => {
+  const sendMessageToRelay = async (
+    message: string
+    ): Promise<{ content: string; metadata?: any }> => {
     // This will connect to react-grab relay server
     // For now, return a mock response
     return {
-      type: 'message',
-      payload: {
-        message: {
-          id: `msg_${Date.now()}`,
-          role: 'assistant',
-          content: `Echo: ${message}`,
-          metadata: { model: 'mock' },
-        },
-      },
-      timestamp: Date.now(),
+      content: `Echo: ${message}`,
+      metadata: { model: 'mock' },
     }
   }
 
