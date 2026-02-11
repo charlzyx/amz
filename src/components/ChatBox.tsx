@@ -18,7 +18,6 @@ export const ChatBox: React.FC = () => {
 
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
@@ -54,7 +53,6 @@ export const ChatBox: React.FC = () => {
     })
 
     setLoading(true)
-    setStreamingMessageId(null)
 
     try {
       // Send message to relay server (to be implemented)
@@ -67,7 +65,6 @@ export const ChatBox: React.FC = () => {
       })
     } finally {
       setLoading(false)
-      setStreamingMessageId(null)
     }
   }
 
@@ -77,7 +74,7 @@ export const ChatBox: React.FC = () => {
 
     if (type === 'message' && payload.message) {
       const message = payload.message
-      const { isChunk, chunkIndex, done } = message
+      const { isChunk, chunkIndex } = message
 
       if (isChunk === true && chunkIndex !== undefined) {
         // 流式消息
@@ -88,15 +85,9 @@ export const ChatBox: React.FC = () => {
             content: message.content,
             metadata: message.metadata,
           })
-          setStreamingMessageId(message.id)
         } else {
           // 后续 chunks：追加到当前消息
           appendLastMessage(currentSessionId!, message.content)
-        }
-
-        // 如果是最后一个 chunk，清除 streaming 状态
-        if (done) {
-          setStreamingMessageId(null)
         }
       } else {
         // 非流式消息：直接添加
